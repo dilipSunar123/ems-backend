@@ -238,7 +238,6 @@ public class AttendanceController {
         for (AttendanceEntity entity: attendanceEntityList) {
 
             String yearData = String.valueOf(entity.getLoginDateAndTime());
-
             String month = yearData.substring(0, 4);
 
 //            System.out.println("Month ID: " + monthId);
@@ -248,6 +247,8 @@ public class AttendanceController {
                 recordOfParticularYear.add(entity);
             }
         }
+
+        System.out.println(recordOfParticularYear);
 
         for (AttendanceEntity entity: recordOfParticularYear) {
             if (entity.getLog().equals("On Leave")) onLeave++;

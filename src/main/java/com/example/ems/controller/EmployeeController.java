@@ -480,17 +480,6 @@ public class EmployeeController {
         return "Email sent successfully!";
     }
 
-    public String generateRandomPassword() {
-        Random random = new Random();
-
-        int randomNumber = 100000 + random.nextInt(900000);
-
-        pw = "ems" + randomNumber;
-        System.out.println(pw);
-
-        return BCrypt.hashpw("ems" + String.valueOf(randomNumber), BCrypt.gensalt());
-    }
-
 
     // login
     @GetMapping("/findEmployee/{email}/{password}")
@@ -549,6 +538,17 @@ public class EmployeeController {
         return false;
     }
 
+    public String generateRandomPassword() {
+        Random random = new Random();
+
+        int randomNumber = 100000 + random.nextInt(900000);
+
+        pw = "ems" + randomNumber;
+        System.out.println(pw);
+
+        return BCrypt.hashpw("ems" + String.valueOf(randomNumber), BCrypt.gensalt());
+    }
+
     @PutMapping("/resetPassword/{email}/{password}")
     void addPassword(@PathVariable String email, @PathVariable String password) {
 
@@ -564,7 +564,7 @@ public class EmployeeController {
 
         EmployeeEntity employeeEntity = registerRepo.getReferenceById(idOfCorrespondingEmail);
 
-        employeeEntity.setPassword(password);   // updated one
+        employeeEntity.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));   // updated one
         employeeEntity.setEmpId(employeeEntity.getEmpId());
         employeeEntity.setEmp_name(employeeEntity.getEmp_name());
         employeeEntity.setEmail(employeeEntity.getEmail());
