@@ -12,7 +12,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
@@ -191,150 +193,58 @@ public class LeaveController {
 
             attendanceRepo.save(attendanceEntity);
 
+
+            // Calculate duration of leave in days
+            LocalDate startDate = LocalDate.parse(entity.getStartDate().substring(0, 10)); // Extracting date part only
+            LocalDate endDate = LocalDate.parse(entity.getEndDate().substring(0, 10)); // Extracting date part only
+            long durationInDays = ChronoUnit.DAYS.between(startDate, endDate) + 1; // +1 to include both start and end dates
+
             // decrement count of leave
             String leaveAppliedFor = entity.getLeaveTypeEntity().getLeaveType();
 //            System.out.println(entity.getLeaveTypeEntity().getLeaveType());
 
             List<LeaveList> leaveLists = leaveListRepo.findAll();
 
-//            for (LeaveList list: leaveLists) {
-//                if (leaveAppliedFor.equals("Floater Leave")) {
-//                    if (list.getFloaterLeave() > 1) {
-//                        if (entity.getSameDay().equals("Yes")) {
-//                            LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                            if (updatedLeaveList != null) {
-//                                int balance = updatedLeaveList.getFloaterLeave();
-//                                balance--;
-//
-//                                updatedLeaveList.setFloaterLeave(balance);
-//
-//                                leaveListRepo.save(updatedLeaveList);
-//                            } else {
-//                                int balance = updatedLeaveList.getFloaterLeave();
-//                                balance -= 0.5;
-//
-//                                updatedLeaveList.setFloaterLeave(balance);
-//
-//                                leaveListRepo.save(updatedLeaveList);
-//                            }
-//                        } else
-//
-//                    } else {
-//                        return ResponseEntity.ok("No floater leave available");
-//                    }
-//                } else if (leaveAppliedFor.equals("Maternity Leave")) {
-//                    if (list.getMaternityLeave() > 0) {
-//
-//                        LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                        if (updatedLeaveList != null) {
-//                            int balance = updatedLeaveList.getMaternityLeave();
-//                            balance--;
-//
-//                            updatedLeaveList.setMaternityLeave(balance);
-//
-//                            leaveListRepo.save(updatedLeaveList);
-//                        }
-//                    } else {
-//                        return ResponseEntity.ok("No maternity leave available");
-//                    }
-//                } else if (leaveAppliedFor.equals("Paid Leave")) {
-//                    if (list.getPaidLeave() > 0) {
-//
-//                        LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                        if (updatedLeaveList != null) {
-//                            int balance = updatedLeaveList.getPaidLeave();
-//                            balance--;
-//
-//                            updatedLeaveList.setPaidLeave(balance);
-//
-//                            leaveListRepo.save(updatedLeaveList);
-//                        }
-//                    } else {
-//                        return ResponseEntity.ok("No paid leave available");
-//                    }
-//                } else if (leaveAppliedFor.equals("Paternity Leave")) {
-//                    if (list.getPaternityLeave() > 0) {
-//
-//                        LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                        if (updatedLeaveList != null) {
-//                            int balance = updatedLeaveList.getPaternityLeave();
-//                            balance--;
-//
-//                            updatedLeaveList.setPaternityLeave(balance);
-//
-//                            leaveListRepo.save(updatedLeaveList);
-//                        }
-//                    } else {
-//                        return ResponseEntity.ok("No paternity leave available");
-//                    }
-//                } else if (leaveAppliedFor.equals("Sick Leave")) {
-//                    if (list.getSickLeave() > 0) {
-//
-//                        LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                        if (updatedLeaveList != null) {
-//                            int balance = updatedLeaveList.getSickLeave();
-//                            balance--;
-//
-//                            updatedLeaveList.setSickLeave(balance);
-//
-//                            leaveListRepo.save(updatedLeaveList);
-//                        }
-//                    } else {
-//                        return ResponseEntity.ok("No sick leave available");
-//                    }
-//                } else if (leaveAppliedFor.equals("Unpaid Leave")) {
-//                    LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
-//                    if (updatedLeaveList != null) {
-//                        int balance = updatedLeaveList.getUnpaidLeave();
-//                        balance--;
-//
-//                        updatedLeaveList.setSickLeave(balance);
-//
-//                        leaveListRepo.save(updatedLeaveList);
-//                    }
-//                }
-//            }
-
 
             for (LeaveList list : leaveLists) {
                 switch (leaveAppliedFor) {
                     case "Floater Leave":
                         if (list.getFloaterLeave() > 0) {
-                            decrementLeaveBalance(list, "floaterLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                            decrementLeaveBalance(list, "Floater Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         } else {
                             return ResponseEntity.ok("No floater leave available");
                         }
                         break;
                     case "Maternity Leave":
                         if (list.getMaternityLeave() > 0) {
-                            decrementLeaveBalance(list, "maternityLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                            decrementLeaveBalance(list, "Maternity Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         } else {
                             return ResponseEntity.ok("No maternity leave available");
                         }
                         break;
                     case "Paid Leave":
                         if (list.getPaidLeave() > 0) {
-                            decrementLeaveBalance(list, "paidLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                            decrementLeaveBalance(list, "Paid Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         } else {
                             return ResponseEntity.ok("No paid leave available");
                         }
                         break;
                     case "Paternity Leave":
                         if (list.getPaternityLeave() > 0) {
-                            decrementLeaveBalance(list, "paternityLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                            decrementLeaveBalance(list, "Paternity Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         } else {
                             return ResponseEntity.ok("No paternity leave available");
                         }
                         break;
                     case "Sick Leave":
                         if (list.getSickLeave() > 0) {
-                            decrementLeaveBalance(list, "sickLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                            decrementLeaveBalance(list, "Sick Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         } else {
                             return ResponseEntity.ok("No sick leave available");
                         }
                         break;
                     case "Unpaid Leave":
-                        decrementLeaveBalance(list, "unpaidLeave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
+                        decrementLeaveBalance(list, "Unpaid Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
                         break;
                     default:
                         break;
@@ -389,47 +299,47 @@ public class LeaveController {
         LeaveList updatedLeaveList = leaveListRepo.findById(list.getId()).orElse(null);
 
         if (updatedLeaveList != null) {
-            int balance = 0;
+            float balance = 0;
 
             switch (leaveType) {
-                case "floaterLeave":
+                case "Floater Leave":
                     balance = updatedLeaveList.getFloaterLeave();
                     break;
-                case "maternityLeave":
+                case "Maternity Leave":
                     balance = updatedLeaveList.getMaternityLeave();
                     break;
-                case "paidLeave":
+                case "Paid Leave":
                     balance = updatedLeaveList.getPaidLeave();
                     break;
-                case "paternityLeave":
+                case "Paternity Leave":
                     balance = updatedLeaveList.getPaternityLeave();
                     break;
-                case "sickLeave":
+                case "Sick Leave":
                     balance = updatedLeaveList.getSickLeave();
                     break;
-                case "unpaidLeave":
+                case "Unpaid Leave":
                     balance = updatedLeaveList.getUnpaidLeave();
                     break;
             }
             balance -= duration;
 
             switch (leaveType) {
-                case "floaterLeave":
+                case "Floater Leave":
                     updatedLeaveList.setFloaterLeave(balance);
                     break;
-                case "maternityLeave":
+                case "Maternity Leave":
                     updatedLeaveList.setMaternityLeave(balance);
                     break;
-                case "paidLeave":
+                case "Paid Leave":
                     updatedLeaveList.setPaidLeave(balance);
                     break;
-                case "paternityLeave":
+                case "Paternity Leave":
                     updatedLeaveList.setPaternityLeave(balance);
                     break;
-                case "sickLeave":
+                case "Sick Leave":
                     updatedLeaveList.setSickLeave(balance);
                     break;
-                case "unpaidLeave":
+                case "Unpaid Leave":
                     updatedLeaveList.setUnpaidLeave(balance);
                     break;
             }

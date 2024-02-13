@@ -39,32 +39,6 @@ public class LeaveEntity {
     @JoinColumn(name = "leaveTypeId")
     private LeaveTypeEntity leaveTypeEntity;
 
-//    @ManyToOne
-//    @JoinColumn(name = "first_second_or_full_day")
-//    private FirstOrSecondHalfEntity firstOrSecondHalfEntity;
-
-//    @Column(name = "start_half_day")
-//    private boolean startHalfDay;
-//
-//    @Column(name = "end_half_day")
-//    private boolean endHalfDay;
-
-//    @Column(name = "full_day")
-//    private boolean fullDay;
-
-//    @Column(name = "start_first_half")
-//    private boolean startFirstHalf;
-
-//    @Column(name = "start_second_half")
-//    private boolean startSecondHalf;
-
-//    @Column(name = "end_first_half")
-//    private boolean endFirstHalf;
-
-
-//    @Column(name = "end_second_half")
-//    private boolean endSecondHalf;
-
 
     @Column(name = "same_day")
     private String sameDay;

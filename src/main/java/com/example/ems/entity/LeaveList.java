@@ -14,13 +14,13 @@ public class LeaveList {
     @JoinColumn(name = "empId")
     private EmployeeEntity employeeEntity;
 
-    private int sickLeave;
-    private int paidLeave;
-    private int unpaidLeave;
-    private int floaterLeave;
+    private float sickLeave;
+    private float paidLeave;
+    private float unpaidLeave;
+    private float floaterLeave;
 
-    private int maternityLeave;
-    private int paternityLeave;
+    private float maternityLeave;
+    private float paternityLeave;
 
     public int getId() {
         return id;
@@ -38,51 +38,51 @@ public class LeaveList {
         this.employeeEntity = employeeEntity;
     }
 
-    public int getSickLeave() {
+    public float getSickLeave() {
         return sickLeave;
     }
 
-    public void setSickLeave(int sickLeave) {
+    public void setSickLeave(float sickLeave) {
         this.sickLeave = sickLeave;
     }
 
-    public int getPaidLeave() {
+    public float getPaidLeave() {
         return paidLeave;
     }
 
-    public void setPaidLeave(int paidLeave) {
+    public void setPaidLeave(float paidLeave) {
         this.paidLeave = paidLeave;
     }
 
-    public int getUnpaidLeave() {
+    public float getUnpaidLeave() {
         return unpaidLeave;
     }
 
-    public void setUnpaidLeave(int unpaidLeave) {
+    public void setUnpaidLeave(float unpaidLeave) {
         this.unpaidLeave = unpaidLeave;
     }
 
-    public int getFloaterLeave() {
+    public float getFloaterLeave() {
         return floaterLeave;
     }
 
-    public void setFloaterLeave(int floaterLeave) {
+    public void setFloaterLeave(float floaterLeave) {
         this.floaterLeave = floaterLeave;
     }
 
-    public int getMaternityLeave() {
+    public float getMaternityLeave() {
         return maternityLeave;
     }
 
-    public void setMaternityLeave(int maternityLeave) {
+    public void setMaternityLeave(float maternityLeave) {
         this.maternityLeave = maternityLeave;
     }
 
-    public int getPaternityLeave() {
+    public float getPaternityLeave() {
         return paternityLeave;
     }
 
-    public void setPaternityLeave(int paternityLeave) {
+    public void setPaternityLeave(float paternityLeave) {
         this.paternityLeave = paternityLeave;
     }
 

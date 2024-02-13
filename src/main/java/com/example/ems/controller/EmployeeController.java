@@ -103,20 +103,6 @@ public class EmployeeController {
 
     @PostMapping("/addEmployee")
     private ResponseEntity<?> addEmployee(@RequestBody EmployeeEntity entity) {
-
-
-//        EmployeeTypeEntity employeeType = new EmployeeTypeEntity();
-//        employeeType.setemployeeTypeId(1);
-//
-//        // manager
-//        if (entity.getEmployeeType().getemployeeTypeId() == 2) {
-//            employeeType.setemployeeTypeId(2);
-//        }
-
-
-        // when a user is registered, he/she will be a normal employee
-
-
         JobRoleEntity jobRole = new JobRoleEntity();
         jobRole.setJob_id(3);
 

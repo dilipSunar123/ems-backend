@@ -205,25 +205,6 @@ public class AttendanceController {
         return "On Time: " + onTime + "\nOn Leave: " + onLeave + "\nLate Arrival: " + lateArrival;
     }
 
-//    @GetMapping("/getTodayStats")
-//    private List<AttendanceEntity> getTodayStats () {
-//
-//        List<AttendanceEntity> attendanceEntityList = attendanceRepo.findAll();
-//
-//        LocalDateTime todayDate = LocalDateTime.now();
-//
-//        List<AttendanceEntity> empList = new ArrayList<>();
-//
-//        for (AttendanceEntity entity: attendanceEntityList) {
-//            if (entity.getLeaveDate().equals(todayDate)) {
-//                empList.add(entity);
-//            }
-//
-//        }
-//
-//        return empList;
-//    }
-
     @GetMapping("/filterAttendanceByYear/{year}/{empId}")
     private String filterAttendanceByYear(@PathVariable String year, @PathVariable int empId) {
 
