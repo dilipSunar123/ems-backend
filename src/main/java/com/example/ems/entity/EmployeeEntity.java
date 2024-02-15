@@ -11,7 +11,6 @@ import org.mindrot.jbcrypt.BCrypt;
 @Entity
 @Table(name = "employee")
 public class EmployeeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int empId;
@@ -25,6 +24,9 @@ public class EmployeeEntity {
 
     @Column(nullable = false)
     private Long alternate_contact_no;
+
+    @Column(nullable = false)
+    private String alternate_contact_name;
 
     @Column(nullable = false)
     private String permanent_address;
@@ -43,8 +45,8 @@ public class EmployeeEntity {
 
     private String password;
 
-    @Column(name = "material_status", nullable = false)
-    private String materialStatus;
+    @Column(name = "marital_status", nullable = false)
+    private String maritalStatus;
 
     @Column(name = "gender", nullable = false)
     private String gender;
@@ -80,7 +82,6 @@ public class EmployeeEntity {
     @ManyToOne
     @JoinColumn(name = "employeeTypeId")
     private EmployeeTypeEntity employeeType;
-
 
     public int getEmpId() {
         return empId;
@@ -128,6 +129,14 @@ public class EmployeeEntity {
 
     public void setAlternate_contact_no(Long alternate_contact_no) {
         this.alternate_contact_no = alternate_contact_no;
+    }
+
+    public String getAlternate_contact_name() {
+        return alternate_contact_name;
+    }
+
+    public void setAlternate_contact_name(String alternate_contact_name) {
+        this.alternate_contact_name = alternate_contact_name;
     }
 
     public String getPermanent_address() {
@@ -178,12 +187,12 @@ public class EmployeeEntity {
         this.password = password;
     }
 
-    public String getMaterialStatus() {
-        return materialStatus;
+    public String getMaritalStatus() {
+        return maritalStatus;
     }
 
-    public void setMaterialStatus(String materialStatus) {
-        this.materialStatus = materialStatus;
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 
     public String getGender() {
@@ -234,6 +243,14 @@ public class EmployeeEntity {
         this.flag = flag;
     }
 
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public DepartmentEntity getDepartmentEntity() {
         return departmentEntity;
     }
@@ -258,14 +275,6 @@ public class EmployeeEntity {
         this.employeeType = employeeType;
     }
 
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
     @Override
     public String toString() {
         return "EmployeeEntity{" +
@@ -275,33 +284,24 @@ public class EmployeeEntity {
                 ", skills='" + skills + '\'' +
                 ", contact_no=" + contact_no +
                 ", alternate_contact_no=" + alternate_contact_no +
+                ", alternate_contact_name='" + alternate_contact_name + '\'' +
                 ", permanent_address='" + permanent_address + '\'' +
                 ", dob='" + dob + '\'' +
                 ", doj=" + doj +
                 ", shift='" + shift + '\'' +
                 ", correspondence_address='" + correspondence_address + '\'' +
                 ", password='" + password + '\'' +
-                ", materialStatus='" + materialStatus + '\'' +
+                ", maritalStatus='" + maritalStatus + '\'' +
                 ", gender='" + gender + '\'' +
                 ", bloodGroup='" + bloodGroup + '\'' +
                 ", personalEmail='" + personalEmail + '\'' +
                 ", approvalStatus=" + approvalStatus +
                 ", jobRoleEntity=" + jobRoleEntity +
                 ", flag=" + flag +
-                ", data=" + Arrays.toString(profilePicture) +
+                ", profilePicture=" + Arrays.toString(profilePicture) +
                 ", departmentEntity=" + departmentEntity +
                 ", reportingManagerId=" + reportingManagerId +
                 ", employeeType=" + employeeType +
                 '}';
     }
-
-//    public String generateRandomPassword() {
-//        Random random = new Random();
-//
-//        int randomNumber = 100000 + random.nextInt(900000);
-//
-//        System.out.println("ems" + randomNumber);
-//
-//        return BCrypt.hashpw("ems" + String.valueOf(randomNumber), BCrypt.gensalt());
-//    }
 }

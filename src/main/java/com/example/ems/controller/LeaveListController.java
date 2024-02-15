@@ -28,7 +28,7 @@ public class LeaveListController {
                 "\nPaternity Leave : " + leaveLists.getPaternityLeave() +
                 "\nSick Leave : " + leaveLists.getSickLeave() +
                 "\nUnpaid Leave : " + leaveLists.getUnpaidLeave() +
-                "\nCasual Leave : ";
+                "\nCasual Leave : " + leaveLists.getCasualLeave();
     }
 
 

@@ -24,7 +24,7 @@ public class AttendanceEntity {
 
     // if someone is on leave, date will be shown
     @Column(name = "date")
-    private String leaveDate;
+    private String date;
 
     @Column(name = "gross_hour")
     private String grossHour;
@@ -127,11 +127,11 @@ public class AttendanceEntity {
     }
 
     public String getLeaveDate() {
-        return leaveDate;
+        return date;
     }
 
     public void setLeaveDate(String leaveDate) {
-        this.leaveDate = leaveDate;
+        this.date = leaveDate;
     }
 
     @Override
@@ -141,7 +141,7 @@ public class AttendanceEntity {
                 ", loginDateAndTime=" + loginDateAndTime +
                 ", logout_date_and_time=" + logout_date_and_time +
                 ", location='" + location + '\'' +
-                ", leaveDate='" + leaveDate + '\'' +
+                ", leaveDate='" + date + '\'' +
                 ", grossHour='" + grossHour + '\'' +
                 ", log='" + log + '\'' +
                 ", workFromEntity=" + workFromEntity +

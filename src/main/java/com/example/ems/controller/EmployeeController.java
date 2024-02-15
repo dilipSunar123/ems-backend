@@ -1,15 +1,14 @@
 package com.example.ems.controller;
 
-import com.example.ems.entity.EmployeeEntity;
-import com.example.ems.entity.EmployeeTypeEntity;
-import com.example.ems.entity.JobRoleEntity;
-import com.example.ems.entity.LeaveList;
+import com.example.ems.entity.*;
 import com.example.ems.repository.EmployeeRepo;
 import com.example.ems.repository.LeaveListRepo;
+import com.example.ems.repository.TotalLeavesRepo;
 import jakarta.mail.Multipart;
 import jakarta.transaction.Transactional;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +29,9 @@ public class EmployeeController {
 
     @Autowired
     public EmployeeRepo registerRepo;
+
+    @Autowired
+    public TotalLeavesRepo totalLeavesRepo;
 
     @Autowired
     private LeaveListRepo leaveListRepo;
@@ -106,7 +108,6 @@ public class EmployeeController {
         JobRoleEntity jobRole = new JobRoleEntity();
         jobRole.setJob_id(3);
 
-//        entity.setEmployeeType(employeeType);
         entity.setJobRoleEntity(jobRole);
         entity.setDoj(LocalDateTime.now());
         entity.setPassword(generateRandomPassword());
@@ -119,15 +120,47 @@ public class EmployeeController {
 
         LeaveList leaveList =  new LeaveList();
         leaveList.setEmployeeEntity(savedEmployee);
-        leaveList.setSickLeave(10);
-        leaveList.setFloaterLeave(10);
-        leaveList.setPaidLeave(10);
-        leaveList.setUnpaidLeave(10);
-        leaveList.setSickLeave(10);
-        leaveList.setMaternityLeave(10);
-        leaveList.setPaternityLeave(10);
+
+        Map<Integer, Integer> leaveMap = new HashMap<>();
+        leaveMap.put(1, 12); // January
+        leaveMap.put(2, 11); // February
+        leaveMap.put(3, 10);
+        leaveMap.put(4, 9);
+        leaveMap.put(5, 8);
+        leaveMap.put(6, 7);
+        leaveMap.put(7, 6);
+        leaveMap.put(8, 5);
+        leaveMap.put(9, 4);
+        leaveMap.put(10, 3);
+        leaveMap.put(11, 2);
+        leaveMap.put(12, 1);
+
+        int month = LocalDateTime.now().getMonthValue();
+        // 0 is the default value if month is not found in the map
+        int leaveCount = leaveMap.getOrDefault(month, 0);
+
+        // Set leave counts
+        leaveList.setSickLeave(leaveCount);
+        leaveList.setFloaterLeave(leaveCount);
+        leaveList.setPaidLeave(leaveCount);
+        leaveList.setMaternityLeave(leaveCount);
+        leaveList.setPaternityLeave(leaveCount);
+        leaveList.setCasualLeave(leaveCount);
+
+
+        TotalLeaves totalLeaves = new TotalLeaves();
+
+        totalLeaves.setSickLeave(leaveCount);
+        totalLeaves.setFloaterLeave(leaveCount);
+        totalLeaves.setPaidLeave(leaveCount);
+        totalLeaves.setMaternityLeave(leaveCount);
+        totalLeaves.setPaternityLeave(leaveCount);
+        totalLeaves.setCasualLeave(leaveCount);
+        totalLeaves.setEmployeeEntity(savedEmployee);
+
 
         leaveListRepo.save(leaveList);
+        totalLeavesRepo.save(totalLeaves);
 
         return ResponseEntity.ok("Employee added");
     }
@@ -304,8 +337,8 @@ public class EmployeeController {
             if (updatedDetails.getCorrespondence_address() != null) {
                 existingEntity.setCorrespondence_address(updatedDetails.getCorrespondence_address());
             }
-            if (updatedDetails.getMaterialStatus() != null) {
-                existingEntity.setMaterialStatus(updatedDetails.getMaterialStatus());
+            if (updatedDetails.getMaritalStatus() != null) {
+                existingEntity.setMaritalStatus(updatedDetails.getMaritalStatus());
             }
             if (updatedDetails.getGender() != null) {
                 existingEntity.setGender(updatedDetails.getGender());
@@ -438,10 +471,7 @@ public class EmployeeController {
         // id of admin is 2 in the master table "jobs"
         JobRoleEntity jobRole = new JobRoleEntity();
         jobRole.setJob_id(2);
-
-//        admin.setEmployeeType(null);
         admin.setJobRoleEntity(jobRole);
-        admin.setDepartmentEntity(null);
 
         admin.setDoj(LocalDateTime.now());
         admin.setPassword(generateRandomPassword());
@@ -565,11 +595,13 @@ public class EmployeeController {
         employeeEntity.setReportingManagerId(employeeEntity.getReportingManagerId());
         employeeEntity.setDoj(employeeEntity.getDoj());
         employeeEntity.setDob(employeeEntity.getDob());
-        employeeEntity.setMaterialStatus(employeeEntity.getMaterialStatus());
+        employeeEntity.setMaritalStatus(employeeEntity.getMaritalStatus());
         employeeEntity.setGender(employeeEntity.getGender());
         employeeEntity.setBloodGroup(employeeEntity.getBloodGroup());
         employeeEntity.setPersonalEmail(employeeEntity.getPersonalEmail());
         employeeEntity.setApprovalStatus(true);
+        employeeEntity.setAlternate_contact_no(employeeEntity.getAlternate_contact_no());
+        employeeEntity.setAlternate_contact_name(employeeEntity.getAlternate_contact_name());
 
 
         registerRepo.save(employeeEntity);
@@ -628,11 +660,13 @@ public class EmployeeController {
             employeeEntity.setDob(employeeEntity.getDob());
             employeeEntity.setDoj(employeeEntity.getDoj());
             employeeEntity.setReportingManagerId(managerId);  // updated one
-            employeeEntity.setMaterialStatus(employeeEntity.getMaterialStatus());
+            employeeEntity.setMaritalStatus(employeeEntity.getMaritalStatus());
             employeeEntity.setGender(employeeEntity.getGender());
             employeeEntity.setBloodGroup(employeeEntity.getBloodGroup());
             employeeEntity.setPersonalEmail(employeeEntity.getPersonalEmail());
             employeeEntity.setApprovalStatus(true);
+            employeeEntity.setAlternate_contact_name(employeeEntity.getAlternate_contact_name());
+            employeeEntity.setAlternate_contact_no(employee.getAlternate_contact_no());
 
             registerRepo.save(employeeEntity);
 
@@ -695,9 +729,11 @@ public class EmployeeController {
             entity.setDob(entity.getDob());
             entity.setPersonalEmail(entity.getPersonalEmail());
             entity.setGender(entity.getGender());
-            entity.setMaterialStatus(entity.getMaterialStatus());
+            entity.setMaritalStatus(entity.getMaritalStatus());
             entity.setBloodGroup(entity.getBloodGroup());
             entity.setApprovalStatus(true);
+            entity.setAlternate_contact_name(entity.getAlternate_contact_name());
+            entity.setAlternate_contact_no(entity.getAlternate_contact_no());
 
             // updation
             EmployeeTypeEntity employeeType = new EmployeeTypeEntity();
@@ -710,10 +746,4 @@ public class EmployeeController {
         }
 
     }
-
-    // finding reporting manager so that newly uploaded docs can be verified
-//    @GetMapping("/findReportingManagerByEmpId/{empId}")
-//    private EmployeeEntity findReportingManager(@PathVariable int empId) {
-//        return registerRepo.findByReportingManagerId(empId);
-//    }
 }

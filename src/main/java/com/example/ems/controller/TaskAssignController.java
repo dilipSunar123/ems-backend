@@ -186,4 +186,31 @@ public class TaskAssignController {
 
     }
 
+    @PutMapping("/updateTaskAssigned/{taskId}")
+    private ResponseEntity<?> updateTaskAssigned(@RequestBody TaskAssignEntity updatedEntity, @PathVariable int taskId) {
+
+        TaskAssignEntity prevEntity = taskAssignRepo.getReferenceById(taskId);
+
+        prevEntity.setTaskId(prevEntity.getTaskId());
+        prevEntity.setTaskTitle(updatedEntity.getTaskTitle());
+        prevEntity.setTaskDesc(updatedEntity.getTaskDesc());
+        prevEntity.setStartDate(updatedEntity.getStartDate());
+        prevEntity.setEndDate(updatedEntity.getEndDate());
+        prevEntity.setStatus(updatedEntity.getStatus());
+        prevEntity.setAssignedBy(updatedEntity.getAssignedBy());
+        prevEntity.setEmployeeEntity(updatedEntity.getEmployeeEntity());
+
+        taskAssignRepo.save(prevEntity);
+
+
+        return ResponseEntity.ok("Task details changed");
+    }
+
+    @GetMapping("/findByTaskId/{taskId}")
+    private ResponseEntity<?> findByTaskId (@PathVariable int taskId) {
+
+        return ResponseEntity.ok(taskAssignRepo.findById(taskId));
+
+    }
+
 }

@@ -1,18 +1,15 @@
 package com.example.ems.entity;
 
+
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "leaveList")
-public class LeaveList {
+@Entity(name = "total_leaves")
+public class TotalLeaves {
+
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "empId")
-    private EmployeeEntity employeeEntity;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int totalLeaveId;
 
     private float sickLeave;
     private float paidLeave;
@@ -24,20 +21,17 @@ public class LeaveList {
 
     private float casualLeave;
 
-    public int getId() {
-        return id;
+
+    @OneToOne
+    @JoinColumn(name = "empId")
+    private EmployeeEntity employeeEntity;
+
+    public int getTotalLeaveId() {
+        return totalLeaveId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public EmployeeEntity getEmployeeEntity() {
-        return employeeEntity;
-    }
-
-    public void setEmployeeEntity(EmployeeEntity employeeEntity) {
-        this.employeeEntity = employeeEntity;
+    public void setTotalLeaveId(int totalLeaveId) {
+        this.totalLeaveId = totalLeaveId;
     }
 
     public float getSickLeave() {
@@ -96,11 +90,18 @@ public class LeaveList {
         this.casualLeave = casualLeave;
     }
 
+    public EmployeeEntity getEmployeeEntity() {
+        return employeeEntity;
+    }
+
+    public void setEmployeeEntity(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
+    }
+
     @Override
     public String toString() {
-        return "LeaveList{" +
-                "id=" + id +
-                ", employeeEntity=" + employeeEntity +
+        return "TotalLeaves{" +
+                "totalLeaveId=" + totalLeaveId +
                 ", sickLeave=" + sickLeave +
                 ", paidLeave=" + paidLeave +
                 ", unpaidLeave=" + unpaidLeave +
@@ -108,6 +109,7 @@ public class LeaveList {
                 ", maternityLeave=" + maternityLeave +
                 ", paternityLeave=" + paternityLeave +
                 ", casualLeave=" + casualLeave +
+                ", employeeEntity=" + employeeEntity +
                 '}';
     }
 }

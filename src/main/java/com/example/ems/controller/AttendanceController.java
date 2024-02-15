@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class AttendanceController {
@@ -47,6 +48,7 @@ public class AttendanceController {
         workFrom.setWorkFromId(workFromId);
 
         entity.setWorkFromEntity(workFrom);
+        entity.setLeaveDate(localDateTime.toString());
 
         // Create a LocalTime representing 9:30 AM
 //        LocalTime comparisonTime = LocalTime.of(9, 30);
@@ -122,42 +124,101 @@ public class AttendanceController {
         return attendanceRepo.findByEmployeeEntityEmpId(empId);
     }
 
+//    @GetMapping("/filterAttendanceByMonth/{monthId}/{empId}")
+//    private String filterAttendanceByMonth(@PathVariable String monthId, @PathVariable int empId) {
+//
+//        List<AttendanceEntity> attendanceEntityList = attendanceRepo.findByEmployeeEntityEmpId(empId);
+//
+//        List<AttendanceEntity> recordOfParticularMonth = new ArrayList<>();
+//
+//        for (AttendanceEntity entity: attendanceEntityList) {
+//
+//            String dateData = String.valueOf(entity.getLoginDateAndTime());
+//
+//            System.out.println(dateData);
+//
+//            String month = dateData.substring(5, 7);
+//
+//            System.out.println("Month ID: " + monthId);
+//            System.out.println("Month : " + month);
+//
+//            if (month.equals(String.valueOf(monthId))) {
+//                recordOfParticularMonth.add(entity);
+//            }
+//        }
+//
+//        int onTime = 0;
+//        int lateArrival = 0;
+//        int onLeave = 0;
+//
+//        for (AttendanceEntity entity: recordOfParticularMonth) {
+//
+//            if (entity.getLog().equals("On Time")) onTime++;
+//            else if (entity.getLog().equals("Late Arrival")) lateArrival++;
+//            else onLeave++;
+//
+//        }
+//        return "On Leave : " + onLeave + "\nLate Arrival : " + lateArrival + "\nOn Time : " + onTime;
+//    }
+
+
+//    @GetMapping("/filterAttendanceByMonth/{monthId}/{empId}")
+//    private String filterAttendanceByMonth(@PathVariable String monthId, @PathVariable int empId) {
+//
+//        List<AttendanceEntity> attendanceEntityList = attendanceRepo.findByEmployeeEntityEmpId(empId);
+//
+//        int onLeave = 0;
+//        int onTime = 0;
+//        int lateArrival = 0;
+//
+//        for (AttendanceEntity attendanceEntity: attendanceEntityList) {
+//
+//            LocalDateTime dateTime = LocalDateTime.parse(attendanceEntity.getLeaveDate());
+//            int month = dateTime.getMonthValue();
+//
+//            if (month == Integer.parseInt(monthId)) {
+//
+//                if (attendanceEntity.getLog().equals("On Leave")) onLeave++;
+//                else if (attendanceEntity.getLog().equals("On Time")) onTime++;
+//                else lateArrival++;
+//
+//            }
+//
+//        }
+//
+//        return "On Leave : " + onLeave + "\nLate Arrival : " + lateArrival + "\nOn Time : " + onTime;
+//
+//    }
+
     @GetMapping("/filterAttendanceByMonth/{monthId}/{empId}")
     private String filterAttendanceByMonth(@PathVariable String monthId, @PathVariable int empId) {
 
         List<AttendanceEntity> attendanceEntityList = attendanceRepo.findByEmployeeEntityEmpId(empId);
 
-        List<AttendanceEntity> recordOfParticularMonth = new ArrayList<>();
+        int onLeave = 0;
+        int onTime = 0;
+        int lateArrival = 0;
 
-        for (AttendanceEntity entity: attendanceEntityList) {
+        for (AttendanceEntity attendanceEntity : attendanceEntityList) {
+            LocalDateTime dateTime = LocalDateTime.parse(attendanceEntity.getLeaveDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+            int month = dateTime.getMonthValue();
 
-            String dateData = String.valueOf(entity.getLoginDateAndTime());
-
-            System.out.println(dateData);
-
-            String month = dateData.substring(5, 7);
-
-            System.out.println("Month ID: " + monthId);
-            System.out.println("Month : " + month);
-
-            if (month.equals(String.valueOf(monthId))) {
-                recordOfParticularMonth.add(entity);
+            if (month == Integer.parseInt(monthId)) {
+                if (attendanceEntity.getLog().equals("On Leave")) {
+                    onLeave++;
+                } else if (attendanceEntity.getLog().equals("On Time")) {
+                    onTime++;
+                } else {
+                    lateArrival++;
+                }
             }
         }
 
-        int onTime = 0;
-        int lateArrival = 0;
-        int onLeave = 0;
-
-        for (AttendanceEntity entity: recordOfParticularMonth) {
-
-            if (entity.getLog().equals("On Time")) onTime++;
-            else if (entity.getLog().equals("Late Arrival")) lateArrival++;
-            else onLeave++;
-
-        }
         return "On Leave : " + onLeave + "\nLate Arrival : " + lateArrival + "\nOn Time : " + onTime;
     }
+
+
+
 
 
     @GetMapping("/fetchNoOfOnLeaveOnTimeAndLateArrival")
@@ -220,9 +281,6 @@ public class AttendanceController {
 
             String yearData = String.valueOf(entity.getLoginDateAndTime());
             String month = yearData.substring(0, 4);
-
-//            System.out.println("Month ID: " + monthId);
-//            System.out.println("Month : " + month);
 
             if (month.equals(String.valueOf(year))) {
                 recordOfParticularYear.add(entity);
