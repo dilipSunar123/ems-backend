@@ -464,10 +464,6 @@ public class EmployeeController {
     @PostMapping("/addAdmin")
     private ResponseEntity<?> addAdmin(@RequestBody EmployeeEntity admin) {
 
-        // admin won't be an employee or employee_manager
-//        EmployeeTypeEntity employeeType = new EmployeeTypeEntity();
-//        employeeType.setemployeeTypeId(0);
-
         // id of admin is 2 in the master table "jobs"
         JobRoleEntity jobRole = new JobRoleEntity();
         jobRole.setJob_id(2);
