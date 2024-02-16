@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 public class EmployeeController {
 
     @Autowired

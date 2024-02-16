@@ -12,6 +12,7 @@ import java.util.TimerTask;
 
 
 @RestController
+@CrossOrigin
 public class EmailController {
 
     private final JavaMailSender javaMailSender;

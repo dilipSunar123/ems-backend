@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 public class LeaveController {
 
     @Autowired
@@ -182,10 +183,12 @@ public class LeaveController {
             // add same details in the attendance table
             AttendanceEntity attendanceEntity = new AttendanceEntity();
 
-            attendanceEntity.setLoginDateAndTime(null);
-            attendanceEntity.setLogout_date_and_time(null);
-            attendanceEntity.setLocation(null);
-            attendanceEntity.setWorkFromEntity(null);
+            attendanceEntity.setLoginDateAndTime(LocalDateTime.now());
+            attendanceEntity.setLogout_date_and_time(LocalDateTime.now());
+            attendanceEntity.setLocation("-");
+            WorkFromEntity workFrom = new WorkFromEntity();
+            workFrom.setWorkFromId(4);
+            attendanceEntity.setWorkFromEntity(workFrom);
             attendanceEntity.setEmployeeEntity(employee);
             attendanceEntity.setLog("On Leave");
             attendanceEntity.setGrossHour(String.valueOf(0));
@@ -265,64 +268,6 @@ public class LeaveController {
                 default:
                     break;
             }
-
-
-
-
-//            for (LeaveList list : leaveLists) {
-//                switch (leaveAppliedFor) {
-//                    case "Floater Leave":
-//                        if (list.getFloaterLeave() > 0) {
-//                            decrementLeaveBalance(list, "Floater Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No floater leave available");
-//                        }
-//                        break;
-//                    case "Maternity Leave":
-//                        if (list.getMaternityLeave() > 0) {
-//                            decrementLeaveBalance(list, "Maternity Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No maternity leave available");
-//                        }
-//                        break;
-//                    case "Paid Leave":
-//                        if (list.getPaidLeave() > 0) {
-//                            decrementLeaveBalance(list, "Paid Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No paid leave available");
-//                        }
-//                        break;
-//                    case "Paternity Leave":
-//                        if (list.getPaternityLeave() > 0) {
-//                            decrementLeaveBalance(list, "Paternity Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No paternity leave available");
-//                        }
-//                        break;
-//                    case "Sick Leave":
-//                        if (list.getSickLeave() > 0) {
-//                            decrementLeaveBalance(list, "Sick Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No sick leave available");
-//                        }
-//                        break;
-//                    case "Casual Leave":
-//                        if (list.getCasualLeave() > 0) {
-//                            decrementLeaveBalance(list, "Casual Leave", entity.getSameDay().equals("Yes")? 1 : 0.5);
-//                        } else {
-//                            return ResponseEntity.ok("No Casual leave available");
-//                        }
-//                        break;
-////                    case "Unpaid Leave":
-////                        decrementLeaveBalance(list, "Unpaid Leave", entity.getSameDay().equals("Yes") ? 1 : 0.5);
-////                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-
-
-
         } else {
             SimpleMailMessage message = new SimpleMailMessage();
 
