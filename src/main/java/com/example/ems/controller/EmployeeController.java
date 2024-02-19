@@ -193,32 +193,6 @@ public class EmployeeController {
         return ResponseEntity.ok("Something went wrong!");
     }
 
-//    @GetMapping("/viewProfilePicture/{empId}")
-//    @Transactional
-//    private ResponseEntity<?> getProfilePicture(@PathVariable int empId) {
-//
-//        EmployeeEntity employee = registerRepo.getReferenceById(empId);
-//
-//
-//        System.out.println(employee);
-//
-////        System.out.println(employee);
-////
-////        if (employee.getProfilePicture() != null) {
-////            HttpHeaders headers = new HttpHeaders();
-////
-////            headers.setContentType(MediaType.IMAGE_JPEG);
-////
-////            // return the image data as a ByteArrayResource
-////            return ResponseEntity.ok().headers(headers).body(new ByteArrayResource(employee.getProfilePicture()));
-////        } else {
-////            // Handle case where no profile picture is available
-////            return ResponseEntity.notFound().build();
-////        }
-//
-//        return ResponseEntity.ok("hi");
-//    }
-
     @GetMapping("/viewProfilePicture/{empId}")
     private ResponseEntity<byte[]> getProfilePicture(@PathVariable int empId) {
         Optional<EmployeeEntity> optionalEmployee = registerRepo.findById(empId);
@@ -334,9 +308,10 @@ public class EmployeeController {
             if (updatedDetails.getDob() != null) {
                 existingEntity.setDob(updatedDetails.getDob());
             }
-            if (updatedDetails.getDoj() != null) {
-                existingEntity.setDoj(updatedDetails.getDoj());
-            }
+//            if (updatedDetails.getDoj() != null) {
+//                existingEntity.setDoj(updatedDetails.getDoj());
+//            }
+            updatedDetails.setDoj(existingEntity.getDoj()); // doj remains the same
             if (updatedDetails.getShift() != null) {
                 existingEntity.setShift(updatedDetails.getShift());
             }
