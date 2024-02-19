@@ -325,6 +325,9 @@ public class EmployeeController {
             if (updatedDetails.getAlternate_contact_no() != null) {
                 existingEntity.setAlternate_contact_no(updatedDetails.getAlternate_contact_no());
             }
+            if (updatedDetails.getAlternate_contact_name() != null) {
+                existingEntity.setAlternate_contact_name(updatedDetails.getAlternate_contact_name());
+            }
             if (updatedDetails.getPermanent_address() != null) {
                 existingEntity.setPermanent_address(updatedDetails.getPermanent_address());
             }
