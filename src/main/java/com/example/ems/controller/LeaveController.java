@@ -43,8 +43,8 @@ public class LeaveController {
         this.javaMailSender = javaMailSender;
     }
 
-    @PostMapping("/requestLeave/{email}")
-    private ResponseEntity<?> addLeave(@RequestBody LeaveEntity entity, @PathVariable String email) {
+    @PostMapping(path = {"/requestLeave", "/requestLeave/{email}"})
+    private ResponseEntity<?> addLeave(@RequestBody LeaveEntity entity, @PathVariable(required = false) String email) {
 
         LeaveEntity leaveEntity = new LeaveEntity();
 
@@ -72,7 +72,7 @@ public class LeaveController {
         String msg = sendEmailToManager(managerId, entity.getEmployeeEntity().getEmpId(), leaveEntity);
 
         // another person if employee wants to inform about the leave
-        if (!email.equals("")) {
+        if (email != null) {
 
             System.out.println("---------------------------------------------hello");
 
@@ -89,7 +89,8 @@ public class LeaveController {
 
 
             javaMailSender.send(message);
-
+        } else {
+            System.out.println("----------------------- done -------------------------");
         }
 
         if (msg.equals("No reporting manager found for employee")) {
@@ -99,7 +100,6 @@ public class LeaveController {
         repo.save(leaveEntity);
 
         return ResponseEntity.ok("Leave request sent for approval");
-
     }
 
     private String sendEmailToManager(@PathVariable int managerId, @PathVariable int empId, @PathVariable LeaveEntity leaveEntity) {
